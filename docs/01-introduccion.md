@@ -1,12 +1,14 @@
 # Introducción
 
 ## Prerequisitos
-Para seguir esta guía únicamente necesitarás **conocimientos básicos/medios de PHP** y motivación para aprender. Si todavía no dispones de estos conocimientos, puedes utilizar el material gratuito disponible en [http://jonvadillo.com/learn](http://jonvadillo.com/learn) para comenzar tu aprendizaje.
+
+Para seguir esta guía únicamente necesitarás **conocimientos básicos/medios de PHP** y motivación para aprender. Si todavía no dispones de estos conocimientos, puedes utilizar el material gratuito disponible en [http://jonvadillo.com/learn](http://jonvadillo.com/learn) para comenzar tu aprendizaje. 
 
 !!! tip "Consejo"
     Cualquier editor de texto te servirá también para programar. No obstante, te recomiendo [VS Code](https://code.visualstudio.com/) o [PhpStorm](https://www.jetbrains.com/es-es/phpstorm/), los cuales considero sin duda alguna dos de los editores para PHP más potentes en la actualidad.
 
 ## ¿Qué es Laravel?
+
 Tal y como dice la guía oficial, Laravel es un **framework de desarrollo de aplicaciones web** con una sintaxis elegante que nos permitirá desarrollar aplicaciones web de forma rápida y segura.
 
 El objetivo de [Laravel](https://laravel.com/) es permitir a los desarrolladores crear aplicaciones web robustas y profesionales, de forma ágil y con una estructura adecuada. Laravel facilita la implentación de cualquier funcionalidad que toda aplicación profesional pueda necesitar (interacción con bases de datos, seguridad, servicios web, etc.).
@@ -14,6 +16,7 @@ El objetivo de [Laravel](https://laravel.com/) es permitir a los desarrolladores
 En este libro aprenderás a **crear aplicaciones web con Laravel desde cero**, desde lo más básico hasta funcionalidades más complejas que incluyan aspectos como la seguridad o control de acceso.
 
 ## Características principales
+
 Algunas de las características de Laravel son:
 
 - Sistema intuitivo de rutas.
@@ -24,6 +27,7 @@ Algunas de las características de Laravel son:
 - Una grande comunidad de desarrolladores y expertos.
 
 ## Ecosistema Laravel
+
 Es importante conocer bien los actores principales del ecosistema Laravel:
 
 - **Router**: recibe todas las peticiones y las envía al controlador adecuado (también puede ejecutar algún middleware específico antes de llamar al controlador).
@@ -41,6 +45,7 @@ Tal y como muestra la imagen anterior, el flujo de una petición en una aplicaci
 4. Por último, el controlador genera la vista correspondiente y se la envía al cliente.
 
 ## Estructura de carpetas
+
 Laravel crea una estructura de ficheros como punto de partida para todo tipo de aplicaciones:
 
 - `/app`: contienne el código fuente de la aplicación y la mayoría de las clases que crearemos. Importante comentar las carpeta `/app/Http` que almacenará los controladores de la aplicación que vayamos creando.
