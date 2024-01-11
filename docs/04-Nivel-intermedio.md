@@ -1,18 +1,21 @@
 # Laravel nivel intermedio
 
 ## Route Model Binding
+
 Normalmente cuando se incluye el ID de un registro en la URL, como por ejemplo en una ruta como `/articulos/{id}` de tipo `GET`, lo más común es que el controlador de turno tenga que recuperar de la base de datos el registro con el ID indicado. Es por esto que Laravel permite inyectar directamente el modelo entero en lugar del `id`.
 
 A continuación se muestra un ejemplo en el router:
-``` php
+
+```php
 <?php
 
 use App\Models\Articulo;
- 
+
 Route::get('/articulos/{articulo}', function (Articulo $articulo) {
     return $articulo->titulo;
 });
 ```
+
 Como puede verse, la función en lugar de recibir el ID como parámetro recibe directamente el modelo. Esto ha sido gracias a que el parámetro ha sido declarado del tipo `Articulo` y el nombre del parámentro (`$articulo`) coincide con el parametro de la ruta (`{articulo}`).
 
 Igualmente se puede hacer en el controlador:
@@ -22,7 +25,7 @@ Igualmente se puede hacer en el controlador:
 
 use App\Http\Controllers\ArticuloController;
 use App\Models\Articulo;
- 
+
 // Definición del método en el Controlador:
 public function show(Articulo $articulo)
 {
@@ -30,7 +33,7 @@ public function show(Articulo $articulo)
 }
 ```
 
- ```php
+```php
 <?php
 
 // Definición de la ruta en web.php:
@@ -38,9 +41,11 @@ Route::get('/articulos/{articulo}', [ArticuloController::class, 'show']);
 ```
 
 ### Hands on!
+
 Actualiza la ruta y el controlador ArticuloController de tu aplicación para que utilice el `Route Model Binding` cuando el usuario solicite los detalles de un artículo (show).
 
 ## Borrado de registros
+
 El borrado de registros es un tema que suele traer complicaciones, debido a que desde una página HTML solo es posible enviar peticiones `GET` y `POST` (desde formularios). Por lo tanto, las alternativas son las siguientes:
 
 - Crear una ruta de tipo `GET` específica para el borrado. Por ejemplo: `/articulos/destroy/{id}`
@@ -51,7 +56,7 @@ El borrado de registros es un tema que suele traer complicaciones, debido a que 
 <form method="POST">
      @csrf
      @method("DELETE")
-     
+
      <button type="submit">Eliminar</button>
 </form>
 ```
@@ -75,9 +80,11 @@ public function destroy(Articulo $articulo)
 El borrado de un modelo se puede hacer de forma sencilla invocando al método `delete()` del modelo.
 
 ### Hands on!
+
 Añade la opción de eliminar cualquier artículo de la aplicación.
 
 ## Actualizar un modelo
+
 Al igual que ocurre con la creación de un nuevo modelo, para actualizar un modelo los pasos a seguir son los siguientes:
 
 1. Crear una vista que contenga el formulario de actualización. La ruta en este caso será `/articulos/{articulo}/edit`.
@@ -86,15 +93,16 @@ Al igual que ocurre con la creación de un nuevo modelo, para actualizar un mode
 ### Solución
 
 Nueva vista `/resources/views/articulos/edit.blade.php`:
+
 ```html
 <html>
 <head>
     <title>RevistApp</title>
 </head>
 <body>
-	<h1>Revistapp</h1>
+    <h1>Revistapp</h1>
     <h2>Crear un artículo:</h2>
-    
+
     <form method="POST" action="{{ route('articulos.update', $articulo) }}">
         @csrf
         @method('PUT')
@@ -107,9 +115,11 @@ Nueva vista `/resources/views/articulos/edit.blade.php`:
 </body>
 </html>
 ```
+
 En el código anterior puede verse cómo se han asignado los valores actuales a los atributos `value` de cada campo. Se ha utilizado la directiva `@method('PUT')` de Laravel para indicar que el método de envío será de tipo `PUT`.
 
 Nuevas rutas añadidas a `/routes/web.php`:
+
 ```php
 <?php
 
@@ -140,8 +150,9 @@ public function update(Request $request, Articulo $articulo)
 ```
 
 ## Construir layouts
+
 Las aplicaciones siempre contienen varias parte de la interfaz que son comunes en todas las páginas (la cabecera, menú de navegación, footer, etc.). Una de las características de [Blade](https://laravel.com/docs/9.x/blade) es el uso de Layouts, los cuales permiten de forma muy sencilla compartir entre distintas vistas las partes que tienen en común y así evitar repetir lo mismo múltiples veces. La idea consiste en **separar en un archivo distinto la parte común de nuestras vistas** y especificar en ella las zonas que albergarán los contenidos específicos de cada vista (lo que no es común).
-	
+
 Empecemos por definir un layout básico:
 
 ```html
@@ -153,7 +164,7 @@ Empecemos por definir un layout básico:
         <div class="container">
             @yield('content')
         </div>
-    	<div class="big-footer">
+        <div class="big-footer">
             @yield('footer')
         </div>
     </body>
@@ -177,20 +188,22 @@ Ahora crearemos la vista concreta que especificará el contenido a introducir en
 @section('footer')
     <p>Built by @JonVadillo.</p>
 @endsection
-
 ```
 
 `@section` indica la sección del padre donde será introducido el contenido especificado entre las etiquetas `@section` y `@endsection`.
 
 ### Hands on!
+
 Crea un layout que englobe la parte común que contienen todas las vistas de la aplicación RevistApp. Actualiza las vistas para que extiendan el layout creado.
 
 ## Laravel Vite: cómo trabajar con código JS y CSS
 
 ### Introducción
+
 Hoy en día en el desarrollo de frontend moderno se utilizan herramientas que compilan y opmitizan el código Javascript y CSS. En la actualidad predominan [Webpack](https://webpack.js.org/) y [Vite](https://vitejs.dev/), siendo este último el que Laravel incluye por defecto a partir de su versión `9.19`.
 
 ### Desarrollo de frontend con Laravel
+
 Por seguridad la única carpeta accesible desde el navegador es `/public`. Nuestro servidor apunta siempre a la carpeta `/public`, en la que se encuentra el archivo `index.php` encargado de cargar el framework y redireccionar la petición a la ruta correspondiente.
 
 Sería posible incluir nuestros archivos `.css` o `.js` directamente dentro de nuestra carpeta `/public`, pero lo habitual en desarrollo web es realizar algún tipo de compilación: por ejemplo utilizar archivos `.sass` o algún framework de JavaScript. Es por esto que es necesaria una herramienta como Vite o Webpack. 
@@ -198,6 +211,7 @@ Sería posible incluir nuestros archivos `.css` o `.js` directamente dentro de n
 Configuraremos Vite para que compile los archivos `.css` y `.js` que modifiquemos dentro de la carpeta `/resources` y deje el resultado de la compilación en la carpeta `/public`.
 
 ### Configuración de Vite
+
 Al crear un nuevo proyecto, Laravel crea automáticamente un archivo `vite.config.js` como este:
 
 ```js
@@ -213,6 +227,7 @@ export default defineConfig({
     ],
 });
 ```
+
 La configuración por defecto ya indica a Vite dónde se ubican los archivos `.css` y `.js`.
 
 Nota importante: si estás trabajando con Laravel Sail desde WSL, es posible que tengas problemas para que el comando `npm run dev` esté pendiente de los cambios en los archivos estáticos. Para que funcione correctamente tendrás que añadir lo siguiente a en el archivo ``vite.config.js`:
@@ -230,24 +245,28 @@ plugins: [
     ...
 ```
 
-
 ### Instalar las dependencias e iniciar el servidor de Vite
+
 Para utilizar Vite es necesario tener Node instalado, ya que utilizaremos NPM para instalar las dependencias. Compruébalo mediante el siguiente comando:
 
 ```bash
 node -v
 ```
+
 En caso de no tener Node instalado, puedes hacerlo descargándolo desde la [página web oficial](https://nodejs.org/es/).
 
 A continuación tienes que instalar las dependecias de tu proyecto definidas en el archivo `package.json` ejecutando el comando `npm install`. Las dependencias se instalaran en la carpeta `node_modules`, incluidas Vite y el plugin de Vite para Laravel.
 
 El siguiente paso será iniciar el servidor de Vite:
+
 ```bash
 npm run dev
 ```
+
 El servidor de Vite no tiene nada que ver con el servidor web, se trata de un servidor independiente de Vite encargado de realizar las tareas relacionadas con nuestro frontend.
 
 ### Referenciar los archivos JS y CSS en las plantillas de Blade
+
 Para incluir nuestros recursos (assets) en cualquier plantilla de Blade utilizaremos la siguiente directiva:
 
 ```php
@@ -255,17 +274,21 @@ Para incluir nuestros recursos (assets) en cualquier plantilla de Blade utilizar
 ```
 
 ### Publicar los cambios realizados
+
 Una vez terminemos nuestro desarrollo, ya no será necesario nuestro servidor Vite. Lo único que tendremos que hacer será publicar en la carpeta `/public` los archivos compilados y optimizados. Para ello es necesario ejecutar la siguiente sentencia:
 
 ```bash
 npm run build
 ```
+
 La consola nos mostrará la dirección de los archivos publicados (`/public/build/assets/`). Este paso será necesario antes de desplegar nuestra aplicación en producción.
 
 ## Utilizar Bootstrap en tu proyecto
+
 A diferencia de versiones anteriores, a partir de su versión 6, Laravel no incluye por defecto las dependencias necesarias para [Bootstrap](https://getbootstrap.com/). Por lo tanto, tendremos 4 opciones para utilizar Bootstrap:
 
 a) Referenciar las dependecias JS y CSS utilizando BootstrapCDN (enlaces disponibles en la [documentación oficial](https://getbootstrap.com/docs/5.0/getting-started/introduction/)). Tal y como indica la web oficial, bastaría con lo siguiente:
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 ```
@@ -280,9 +303,11 @@ d) Utilizar [Laravel Mix](https://laravel-mix.com/) para compilar nuestros archi
     Laravel ha sustituido Laravel Mix por Vite a partir de la versión `9.19`, por lo que Vite es la opción más recomendada.
 
 ### Bootstrap con Vite
+
 Sección en construcción.
 
 ### Bootstrap en Laravel Mix (opción no recomendada actualmente)
+
 Laravel Mix es una herramienta basada en Webpack que sirve para compilar los recursos JS y CSS de la parte frontend. En este caso los recursos estarán inicialmente ubicados en la carpeta `/resources` y Laravel Mix dejará dentro de la carpeta `/public` los archivos resultantes ya minimizados.
 
 #### 1. Instalar el paquete Laravel/UI mediante composer.
@@ -300,14 +325,17 @@ php artisan ui bootstrap
 #### 3. Instalar las dependencias
 
 El siguiente comando instalará las dependencias necesarias:
+
 ```bash
 npm install
 ```
+
 En ocasiones, al utilizar Vagrant puede haber problemas si la máquina virtual se ejecuta en un host con Windows 10, por lo que en ese caso lanzar:
 
 ```bash
 npm install --no-bin-links
 ```
+
 Este problema viene porque al realizar la acción `npm install` dentro de nuestra máquina virtual (Linux) se intentan crear enlaces simbólicos, pero al estar ésta sincronizada con Windows (sistema operativo del host) salta el error ya que esto no es posible en un sistema NTFS.
 
 En caso de que el error persista, puede que sea necesario hacer antes un borrado (`rm -rf node_modules`) y luego ejecutar `npm install --no-bin-links`.
@@ -315,13 +343,15 @@ En caso de que el error persista, puede que sea necesario hacer antes un borrado
 #### 4. Compilar el código JS y CSS mediante Webpack:
 
 El siguiente paso es compilar los recursos ubicados en `/resources`:
+
 ```bash
 /* para el entorno de desarrollo  */
 npm run dev
-  
+
 /* para el entorno de producción */
 npm run production
 ```
+
 El comando anterior también dejará los archivos compilados en la carpeta `/public`.
 
 Es posible que ejecutar el comando desde la máquina virtual dé error. Si es así, ejecutarlo desde el la máquina host.
@@ -351,11 +381,13 @@ En caso de tener algún problema con el reconocimiento de la herramienta Laravel
 El método `asset()` generará una URL a nuestros recursos en la carpeta `public/`. Si cambiamos la ubicación de nuestros recursos lo tendremos que especificar en la variable `ASSET_URL` del fichero `.env`.
 
 ### Hands on! (opcional)
+
 Añade estilo a la aplicación mediante el framework Bootstrap 5.
 
 ## Relaciones One-to-Many
 
 ### Definir una relación
+
 Las relaciones en Eloquent ORM se definen como métodos. Supongamos que tenemos dos entidades, `User` y `Articulo`. Podríamos decir que un `User` tiene (*has*) varios `Articulo` o que un `Articulo` pertenece a (*belongs to*) un `User`. Por lo tanto, podemos definir la relación en cualquiera de los dos modelos, incluso en los dos.
 
 ```php
@@ -387,9 +419,11 @@ class Articulo extends Model
     }
 }
 ```
+
 Tienes toda la información sobre cómo definir relaciones entre modelos en la [documentación oficial](https://laravel.com/docs/9.x/eloquent-relationships).
 
 ### Acceder a los modelos de una relación
+
 El acceso se podrá hacer como propiedades del propio modelo, es decir, mediante `$user->articulos` o `$articulo->user`. Esto es gracias a que Eloquent utiliza lo que conocemos como 'dynamic properties' y acceder a los métodos de las relaciones como si fuesen propiedades:
 
 ```php
@@ -407,6 +441,7 @@ foreach ($user_articulos as $articulo) {
 En el ejemplo anterior, la variable `$user_articulos` contiene una colección de objetos de la clase `Articulo`. 
 
 ### Crear la restricción de las claves foráneas en la Base de Datos
+
 Como es lógico, para que el modelo pueda acceder a otro modelo con el que mantiene una relación one-to-many, es necesario especificar la `foreign key` correspondiente a nivel de base de datos. Recordemos que las foreign key permiten mantener la [integridad referencial](https://es.wikipedia.org/wiki/Integridad_referencial) en nuestra base de datos.
 
 Por defecto, si no indicamos lo contrario, el modelo de Eloquent utilizará como foreign key el nombre del modelo que contiene la colección añadiendo el sufijo `'_id'`. Es decir, en el caso anterior la tabla de `Articulo` deberá contener una columna llamada `'user_id'`, ya que el nombre del otro modelo es `User`. Por lo tanto nuestra migración debería quedar de la siguiente forma:
@@ -425,6 +460,7 @@ Por defecto, si no indicamos lo contrario, el modelo de Eloquent utilizará como
     }
 }
 ```
+
 Expliquemos la siguiente sentencia:
 
 ```php
@@ -436,6 +472,7 @@ $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 - `cascadeOnDelete` indica las acciones a realizar cuando se vaya a borrar el registro. El borrado en cascada determina que si el usuario que contiene los artículos es borrado, se borrarán también todos sus artículos. Otras opciones serían `restrictedOnDelete` (restringe el borrado mientras tenga artículos referenciados) o `nullOnDelete` (establece el valor `NULL` a la foreign key de los artículos relacionados).
 
 ### Consejo: cómo añadir columnas a modelo existente
+
 Existen dos escenarios posibles en los cuales queremos realizar cambios sobre modelos existentes:
 
 - Estamos desarrollando una nueva aplicación y no nos importa borrar los datos existentes.
@@ -472,14 +509,15 @@ php artisan migrate:make add_category_to_articulos --table="articulos"
      */
     public function down()
     {
-	    Schema::table('articulos', function ($table) {
-		$table->dropColumn('category');
-	    });
+        Schema::table('articulos', function ($table) {
+        $table->dropColumn('category');
+        });
     }
 }
 ```
 
 ### Hands on!
+
 La vista de detalle de artículo mostrará los comentarios del artículo e incluirá la posibilidad de añadir nuevos comentarios.
 
 #### Solución
@@ -518,18 +556,19 @@ class Comentario extends Model
     protected $fillable = [
         'texto',
     ];
-    
+
     public function articulo()
     {
         return $this->belongsTo(Articulo::class);
     }
-    
+
 }
 ```
 
 Añadir las relación en la clase Articulo:
 
 `/App/Models/Articulo.php`:
+
 ```php
 <?php
 
@@ -543,9 +582,11 @@ class Articulo extends Model
     }
 }
 ```
+
 Actualizar la vista para que muestre el formulario de creación de un comentario y el listado de comentarios del artículo:
 
 `show.blade.php`:
+
 ```html
 <!DOCTYPE html>
 <html lang="es">
@@ -553,7 +594,7 @@ Actualizar la vista para que muestre el formulario de creación de un comentario
     <title>RevistApp</title>
 </head>
 <body>
-	<h1>Revistapp</h1>
+    <h1>Revistapp</h1>
     <h2>Detalle del artículo:</h2>
     <ul>
         <li>Fecha de creación: {{ $articulo->created_at }}</li>
@@ -606,7 +647,7 @@ class ComentarioController extends Controller
     public function store(Request $request, Articulo $articulo)
     {
         $comentario = new Comentario;
-       
+
         $comentario->texto = $request->texto;
         $articulo->comentarios()->save($comentario);
 
@@ -614,11 +655,10 @@ class ComentarioController extends Controller
         $comentario->articulo_id = $articulo->id;
         $comentario->save();
         */
-        
+
         return redirect()->route('articulos.show', $articulo->id);
     }
 }
-
 ```
 
 Registrar la nueva ruta en el router `web.php`:
@@ -628,6 +668,7 @@ Route::post('articulos/{articulo}/comentarios', [ComentarioController::class, 's
 ```
 
 ## Generar datos de prueba
+
 Laravel incluye un mecanismo llamado Seeder que sirve para rellenar la base de datos con datos de prueba. Por defecto nos incluye la clase DatabaseSeeder en la que podemos incluir el código que genere los datos de prueba:
 
 ```php
@@ -673,6 +714,7 @@ php artisan migrate:fresh --seed
 ```
 
 ### Generar Seeders específicos
+
 Es recomendable crear un seeder específico por cada entidad. Para ello, puedes utilizar el siguiente comando:
 
 ```bash
@@ -695,6 +737,7 @@ public function run()
 ```
 
 ### Uso de factories
+
 A la hora de generar datos para testing también es recomendable utilizar Factories para crear los objetos de BBDD. Una Factory simplemente es una clase que define los atributos que tendrá un objeto en su creación. En el siguiente ejemplo se muestra una posible factory para la clase Articulo:
 
 ```php
@@ -719,8 +762,8 @@ class ArticuloFactory extends Factory
         ];
     }
 }
-
 ```
+
 Es suficiente con implementar el método `definition` y especificar en él las propiedades del objeto que se creará. 
 Una vez tenemos creadas las factories, solo nos quedaría utilizarlas desde el Seeder correspondiente:
 
@@ -748,6 +791,7 @@ php artisan make:factory ArticuloFactory
 ```
 
 ## Autenticación
+
 La autenticación es una funcionalidad presente en la gran mayoría de aplicaciones. Básicamente se trata de asegurar que un usuario es quién dice ser mediante un control de acceso a la aplicación.
 
 Las opciones principales que provee Laravel para implementar la autenticación son:
@@ -773,6 +817,7 @@ En concreto necesitaremos lo siguiente:
 #### Crear la estructura necesaria con Laravel UI
 
 El primer paso es instalar el paquete de laravel/ui mediante Composer:
+
 ```
 composer require laravel/ui
 ```
@@ -789,7 +834,6 @@ php artisan ui react
 php artisan ui bootstrap --auth
 php artisan ui vue --auth
 php artisan ui react --auth
-
 ```
 
 En el caso de esta guía ejecutaremos el comando que genera las funciones de login y registro utilizando el framework Bootstrap:
@@ -813,14 +857,15 @@ La segunda es simplemente un nuevo controlador autogenerado como ejemplo. Si int
 ¡Felicidades! Ya tienes la estructura básica de la aplicación creada. Puedes probar a registrar nuevos usuarios y realizar las acciones de login o logout con ellos.
 
 #### Configuración básica
+
 Una de las cosas que tendrás que configurar es la ruta a la que se envía al usuario tras autenticarse. Esto puede especificarse  mediante la variable `HOME` del archivo `RouteServiceProvider.php`:
 
 ```php
 public const HOME = '/home';
 ```
- 
+
 Laravel utiliza por defecto el campo `email` para identificar a los usuarios. Puedes cambiar esto creando un método `username()` en el controlador `LoginController.php`.
- 
+
 ```php
 <?php
 
@@ -842,14 +887,15 @@ protected function redirectTo($request)
 ```
 
 ### Laravel Breeze
+
 A partir de la versión 8 de Laravel se recomienda utilizar Laravel Breeze, el cual utiliza Tailwind CSS en lugar de Bootstrap. Este aspecto es importante ya que afecta a las vistas creadas. Laravel Breeze es una implementación sencilla de las funciones más habituales de autenticación como: login, registro, recuperación de contraseña, verificación de correo electrónico o confirmación de contraseña por correo. Para ello creará todas las vistas, rutas y controladores necesarios y además los dejará disponibles en el código de nuestro proyecto para que podamos modificar todo aquello que necesitemos.
 
 !!! note "Laravel Breeze debe instalarse tras la creación del proyecto"
 
     Laravel Breeze debe instalarse sobre un proyecto recién creado de Laravel, ya que eliminará código existente en rutas, etc. Es lo que Laravel considera un [Starter Kit](https://laravel.com/docs/9.x/starter-kits).
 
-
 #### Crear la estructura necesaria con Laravel Breeze
+
 Para instalar Laravel Breeze es necesario lanzar el siguiente comando, el cual instalará el paquete utilizando Composer:
 
 ```
@@ -876,6 +922,7 @@ Al igual que se hace con el resto de archivos estáticos que queremos compilar y
 Por último, no olvides lanzar las migraciones necesarias mediante el comando `php artisan migrate`.
 
 ### Securizar rutas
+
 Indicaremos las rutas que queramos proteger directamente en nuestro ruter `web.php`:
 
 ```php
@@ -915,7 +962,7 @@ $user = Auth::user();
 // Conseguir el ID del usuario autenticado:
 $id = Auth::id();
 ```
- 
+
 También podremos conseguirlo desde cualquier petición que reciba nuestro controlador:
 
 ```php
@@ -926,7 +973,7 @@ public function update(Request $request)
     $request->user(); //  devuelve una instancia del usuario autenticado.
 }
 ```
- 
+
 Para comprobar si un usuario está autenticado, podemos emplear el método `check()`:
 
 ```php
@@ -940,6 +987,7 @@ if (Auth::check()) {
 ```
 
 ### Redireccionar al usuario no autenticado a una página
+
 Cuando nuestro middleware de autenticación detecte que un usuario tiene que está autenticado para acceder a una ruta, automáticamente redirigirá al usuario donde nosotros le indiquemos (habitualmente una vista de login). Esto lo podremos indicar en el método `redirectTo()` del archivo `app/Http/Middleware/Authenticate.php`.
 
 ```php
@@ -952,13 +1000,14 @@ protected function redirectTo($request)
 ```
 
 ### Hands on!
+
 - Añade las funciones de login, registro y logout a la aplicación.
 - Protege la ruta empleada para escribir un nuevo artículo (solo usuarios autenticados podrán acceder).
 - La opción de borrar un artículo únicamente estará visible para usuarios autenticados.
 - Muestra los comentarios de los artículos únicamente a usuarios autenticados. A los usuarios no identificados muéstrales un mensaje con un enlace a la página de login.
 
-
 ### Autenticación en Blade
+
 También podremos comprobar en nuestras vistas si un usuario está autenticado o no. Para ello tendremos la directiva `@auth` y `@guest`:
 
 ```php
@@ -972,6 +1021,7 @@ También podremos comprobar en nuestras vistas si un usuario está autenticado o
 ```
 
 ## Autorización
+
 Muchas veces la autenticación no es suficiente y queremos especificar **qué acciones puede realizar cada usuario sobre una serie de recursos determinados**. Por ejemplo: ¿Puede cualquier usuario autenticado insertar nuevos artículos en una aplicación, o únicamente debería poder hacerlo un usuario de tipo administrador?¿Quién puede modificar un artículo, cualquier usuario o únicamente su creador?
 
 Aparte de proveernos de mecanismos para la autenticación, Laravel también facilita la [autorización](https://laravel.com/docs/9.x/authorization) de las acciones que pueden realizar los usuarios. Existen dos formas de gestionar la autorización:
@@ -982,12 +1032,14 @@ Aparte de proveernos de mecanismos para la autenticación, Laravel también faci
 A la hora de definir las reglas de autorización de la aplicación, podrás elegir entre utilizar gates, policies o una combinación de las dos. En esta guía únicamente se abordará el uso de las gates.
 
 ### Autorización mediante Gates
+
 Los pasos a seguir son siempre los siguientes:
 
 1. Definir el tipo de permiso o `Gate`.
 2. Comprobar el permiso en el front-end (por ejemplo mostrar u ocultar un contenido) o en el back-end (por ejemplo comprobar si el usuario puede insertar un dato).
 
 #### Definir un Gate
+
 Los Gates se tiene que definir en el método `boot()` de la clase  `App\Providers\AuthServiceProvider.php`. Vemos un ejemplo donde se definen dos gates:
 
 ```php
@@ -996,7 +1048,7 @@ Los Gates se tiene que definir en el método `boot()` de la clase  `App\Provider
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
- 
+
 /**
  * Register any authentication / authorization services.
  *
@@ -1005,7 +1057,7 @@ use Illuminate\Support\Facades\Gate;
 public function boot()
 {
     $this->registerPolicies();
- 
+
     // Devuelve TRUE si el usuario tiene el valor 'is_admin' a 1.
     Gate::define('manage_users', function(User $user) {
         return $user->is_admin == 1;
@@ -1024,6 +1076,7 @@ Explicación de las dos Gates anteriores:
 - `'update-articulo'`: esta Gate comprobará que el creador del Articulo es el usuario actual. Para ello comprobará que el `id` del usuario sea el mismo que el del creador del Articulo (atributo `user_id`). 
 
 #### Comprobar un permiso en el front-end
+
 Tendremos disponible la directiva `@can` o `@cannot` en Blade:
 
 ```html
@@ -1061,18 +1114,19 @@ O por ejemplo:
 ```
 
 #### Comprobar un permiso en el Controlador
+
 Laravel habilita la facade `Gate` para que podamos utilizarla desde nuestros controladores:
 
 ```php
 <?php
- 
+
 namespace App\Http\Controllers;
- 
+
 use App\Http\Controllers\Controller;
 use App\Models\Articulo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
- 
+
 class ArticuloController extends Controller
 {
     /**
@@ -1087,7 +1141,7 @@ class ArticuloController extends Controller
         if (! Gate::allows('update-article', $articulo)) {
             abort(403);
         }
- 
+
         // Actualizar el articulo...
     }
 }
@@ -1101,7 +1155,7 @@ Es posible realizar comprobaciones de varios permisos mediante los métodos `any
 if (Gate::any(['update-articulo', 'delete-articulo'], $post)) {
     // El usuario puede actualizar o borrar el articulo...
 }
- 
+
 if (Gate::none(['update-articulo', 'delete-articulo'], $post)) {
     // El usuario no puede actualizar o borrar el artículo...
 }
@@ -1153,7 +1207,6 @@ Otro forma de realizar la autorización es indicándola como middleware en la ru
 
 Route::post('users', [UserController::class, 'store'])
     ->middleware('can:create_users');
-
 ```
 
 El formato siempre será el mismo: `can:xxxxx` o `cannot:xxxxx`.
@@ -1161,9 +1214,11 @@ El formato siempre será el mismo: `can:xxxxx` o `cannot:xxxxx`.
 Tienes más información sobre la autorización en la [documentación oficial de Laravel](https://laravel.com/docs/9.x/authorization).
 
 ## Manejo de sesiones
+
 HTTP es un protocolo sin estado (stateless), es decir, no guarda ninguna información sobre conexiones anteriores. Esto quiere decir que nuestra aplicación no tiene "memoria", y cada petición realizada por un usuario es nueva para la aplicación. Las sesiones permiten afrontar este problema, ya que son un mecanismo para almacenar información entre las peticiones que realiza un usuario al navegar por nuestra aplicación. Laravel implementa las sesiones de forma que su uso es muy sencillo para los desarrolladores.
 
 #### Configuración
+
 Laravel soporta el manejo de sesiones con distintos backends (bases de datos, ficheros, etc.). Esta configuración se indica en el fichero `config/session.php`, en le que podemos indicar el driver a utilizar ("file", "cookie", "database", "apc", "memcached", "redis", "dynamodb" o "array"). La opción utilizada por defecto es "cookie", la cual es suficiente para la mayoría de aplicaciones.
 
 Más información sobre la configuración en la [documentación oficial](https://laravel.com/docs/8.x/session).
@@ -1172,7 +1227,7 @@ Más información sobre la configuración en la [documentación oficial](https:/
 
 Existen dos formas principales de acceder a la información de la sesión de usuario:
 
--  El helper global `session`:
+- El helper global `session`:
 
 ```php
 <?php
@@ -1187,7 +1242,7 @@ $value = session('key', 'default');
 session(['key' => 'value']);
 ```
 
--  Mediante la instancia `Request` (inyectada en los métodos de nuestros controladores)
+- Mediante la instancia `Request` (inyectada en los métodos de nuestros controladores)
 
 ```php
 <?php
@@ -1206,13 +1261,13 @@ public function show(Request $request, $id)
     $value = $request->session()->pull('key', 'default');
 }
 ```
- 
+
  También es posible acceder a valores de la sesión desde las vistas de Blade utilizardo la función `get()`:
- 
+
 ```
  Session::get('key')
 ```
- 
+
 ### Hands on!
 
 Añade las siguientes funcionalidades a la aplicación:
@@ -1238,7 +1293,7 @@ public function store(Request $request)
         'titulo' => 'required|string|max:255',
         'contenido' =>'required|string'
     ]);
-    
+
     Articulo::create($validated);
 
     return redirect(route('articulos.index'));
@@ -1254,9 +1309,8 @@ Puedes ver todas las reglas de validación disponibles [aquí](https://laravel.c
 Todas las vistas de Laravel tienen disponible la variable llamada `$errors`. En el siguiente ejemplo puede verse cómo mostrar al usuario todos los errores detectados en la validación:
 
 ```php
- 
 <h1>Crear artículo</h1>
- 
+
 @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -1266,12 +1320,11 @@ Todas las vistas de Laravel tienen disponible la variable llamada `$errors`. En 
         </ul>
     </div>
 @endif
-
 ```
 
 ### Directiva `@error`
-La directiva `@error` permite comprobar si un campo concreto ha tenido algún error, y en caso afirmativo mostrar el mensaje de error de dicho campo. Se utilizará de la siguiente manera:
 
+La directiva `@error` permite comprobar si un campo concreto ha tenido algún error, y en caso afirmativo mostrar el mensaje de error de dicho campo. Se utilizará de la siguiente manera:
 
 ```html
 <p>
@@ -1289,17 +1342,19 @@ La directiva `@error` permite comprobar si un campo concreto ha tenido algún er
     @enderror
 </p>
 ```
+
 En caso de error se mostrará el contenido indicado entre las etiquetas `@error` y `@enderror`. Además la variable `$message` estará disponible entre dichas etiquetas e incluirá el mensaje de error.
 
 ### Mantener el valor de los campos correctos
-En caso de que el formulario tenga varios campos correctos, puede ser interesante mantener los valores enviados previamente en lugar de resetear el formulario entero. El valor de los campos que habían sido completados correctamente puede recuperarse mediante la función `old` de Laravel:
 
+En caso de que el formulario tenga varios campos correctos, puede ser interesante mantener los valores enviados previamente en lugar de resetear el formulario entero. El valor de los campos que habían sido completados correctamente puede recuperarse mediante la función `old` de Laravel:
 
 ```php
 <input type="text" name="titulo" value="{{old('titulo')}}">
 ```
 
 ### Traducción de los mensajes de error
+
 Los mensajes de error pueden verse en el fichero `lang/en/validation.php`. En caso de quere traducirlos a otro idioma, bastaría con crear un fichero con la misma estructura bajo el directorio del nuevo idioma. Por ejemplo: `lang/es/validation.php`
 
 En caso de querer profundizar más en la detección y visualización de errores, puedes encontrar más información en la [página oficial](https://laravel.com/docs/9.x/validation).
