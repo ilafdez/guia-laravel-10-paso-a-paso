@@ -151,7 +151,7 @@ public function update(Request $request, Articulo $articulo)
 
 ## Construir layouts
 
-Las aplicaciones siempre contienen varias parte de la interfaz que son comunes en todas las páginas (la cabecera, menú de navegación, footer, etc.). Una de las características de [Blade](https://laravel.com/docs/9.x/blade) es el uso de Layouts, los cuales permiten de forma muy sencilla compartir entre distintas vistas las partes que tienen en común y así evitar repetir lo mismo múltiples veces. La idea consiste en **separar en un archivo distinto la parte común de nuestras vistas** y especificar en ella las zonas que albergarán los contenidos específicos de cada vista (lo que no es común).
+Las aplicaciones siempre contienen varias parte de la interfaz que son comunes en todas las páginas (la cabecera, menú de navegación, footer, etc.). Una de las características de [Blade](https://laravel.com/docs/10.x/blade) es el uso de Layouts, los cuales permiten de forma muy sencilla compartir entre distintas vistas las partes que tienen en común y así evitar repetir lo mismo múltiples veces. La idea consiste en **separar en un archivo distinto la parte común de nuestras vistas** y especificar en ella las zonas que albergarán los contenidos específicos de cada vista (lo que no es común).
 
 Empecemos por definir un layout básico:
 
@@ -287,13 +287,14 @@ La consola nos mostrará la dirección de los archivos publicados (`/public/buil
 
 A diferencia de versiones anteriores, a partir de su versión 6, Laravel no incluye por defecto las dependencias necesarias para [Bootstrap](https://getbootstrap.com/). Por lo tanto, tendremos 4 opciones para utilizar Bootstrap:
 
-a) Referenciar las dependecias JS y CSS utilizando BootstrapCDN (enlaces disponibles en la [documentación oficial](https://getbootstrap.com/docs/5.0/getting-started/introduction/)). Tal y como indica la web oficial, bastaría con lo siguiente:
+a) Referenciar las dependecias JS y CSS utilizando BootstrapCDN (enlaces disponibles en la [documentación oficial](https://getbootstrap.com/docs/5.1/getting-started/introduction/). Tal y como indica la web oficial, bastaría con lo siguiente:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-```
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">b) Descargar las dependecias ([enlace](https://getbootstrap.com/docs/4.4/getting-started/download/)) e incluirlas manualmente en las carpetas `/public/css` y `/public/js`. 
+...
 
-b) Descargar las dependecias ([enlace](https://getbootstrap.com/docs/4.4/getting-started/download/)) e incluirlas manualmente en las carpetas `/public/css` y `/public/js`. 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+```
 
 c) Utilizar [Laravel Mix](https://laravel-mix.com/) para compilar nuestros archivos JS y CSS. 
 
@@ -341,12 +342,11 @@ Con nuestro alias configurado, lo que tenemos que hacer ahora es importar el CSS
 ```scss
 // resources/scss/app.scss
 @import "~bootstrap/scss/bootstrap";
-
 ```
 
 Esto importará **todas** las hojas de estilo que ofrece Bootstrap.
 
-Con eso hecho, lo único que queda es añadir nuestra directiva Vite de Blade en la vista o layout en la que queremos que se apliquen y donde ya podríamos usar cualquier componente de bootstrap:
+Con eso hecho, lo único que queda es añadir nuestra directiva Vite de Blade en la vista o layout en la que queremos que se apliquen y donde ya podríamos usar cualquier componente de Bootstrap:
 
 ```php
 <head>
@@ -403,7 +403,7 @@ npm run build
 
 Y así deberíamos ver nuestras nuevas cabeceras de Bootstrap cuando entremos en nuestro site.
 
-### Hands on! (opcional)
+### Hands on!
 
 Añade estilo a la aplicación mediante el framework Bootstrap 5.
 
@@ -443,7 +443,7 @@ class Articulo extends Model
 }
 ```
 
-Tienes toda la información sobre cómo definir relaciones entre modelos en la [documentación oficial](https://laravel.com/docs/9.x/eloquent-relationships).
+Tienes toda la información sobre cómo definir relaciones entre modelos en la [documentación oficial](https://laravel.com/docs/10.x/eloquent-relationships).
 
 ### Acceder a los modelos de una relación
 
@@ -475,9 +475,9 @@ Por defecto, si no indicamos lo contrario, el modelo de Eloquent utilizará como
         Schema::create('articulos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-
             $table->string('titulo');
             $table->text('contenido');
+            $table->boolean('publicado')
             $table->timestamps();
         });
     }
@@ -491,7 +491,7 @@ $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 ```
 
 - `foreignId` crea una columna del tipo `UNSIGNED BIGINT` con el nombre especificado.
-- `constrained` utilizará las convenciones de Laravel para determinar la tabla y columna a la que se refiere. Nota: si no siguiésemos las convenciones, podríamos indicarle el nombre de la tabla pasándoselo como argumento: `constrainded('users')`.
+- `constrained` utilizará las convenciones de Laravel para determinar la tabla y columna a la que se refiere. Nota: si no siguiésemos las convenciones, podríamos indicarle el nombre de la tabla pasándoselo como argumento: `constrained('users')`.
 - `cascadeOnDelete` indica las acciones a realizar cuando se vaya a borrar el registro. El borrado en cascada determina que si el usuario que contiene los artículos es borrado, se borrarán también todos sus artículos. Otras opciones serían `restrictedOnDelete` (restringe el borrado mientras tenga artículos referenciados) o `nullOnDelete` (establece el valor `NULL` a la foreign key de los artículos relacionados).
 
 ### Consejo: cómo añadir columnas a modelo existente
@@ -741,7 +741,29 @@ php artisan migrate:fresh --seed
 Es recomendable crear un seeder específico por cada entidad. Para ello, puedes utilizar el siguiente comando:
 
 ```bash
-php artisan make:seeder UsersTableSeeder
+php artisan make:seeder ArticuloSeeder
+```
+
+De forma que tengamos:
+
+```php
+class ArticuloSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $faker = Factory::create();
+        for ($i = 0; $i < 50 ; $i++) {
+            Articulo::create([
+                'titulo'=>$faker->sentence,
+                'contenido'=>$faker->text,
+                'publicado'=>$faker->boolean
+            ]);
+        }
+    }
+}
 ```
 
 Por último, tendrás que modificar la clase DatabaseSeeder para que lance nuestros Seeders:
@@ -751,12 +773,19 @@ Por último, tendrás que modificar la clase DatabaseSeeder para que lance nuest
 
 public function run()
 {
-    $this->call([
-        UsersTableSeeder::class,
-        PostsTableSeeder::class,
-        CommentsTableSeeder::class,
-    ]);
+     $this->call([
+        ArticuloSeeder::class
+        //Y los que tuvieramos
+     ]);
 }
+```
+
+Y volver a lanzar el comando:
+
+```cmd
+php artisan db:seed
+//o bien
+php artisan migrate:fresh --seed
 ```
 
 ### Uso de factories
