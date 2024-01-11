@@ -259,7 +259,7 @@ Estas se suelen almacenar dependiendo de la entidad de dominio a la que pertenec
 </html>
 ```
 
-Tendrán la extensión `.blade.php` ya que Laravel utiliza el motor de plantillas [Blade](https://laravel.com/docs/9.x/blade), como veremos más adelante.
+Tendrán la extensión `.blade.php` ya que Laravel utiliza el motor de plantillas [Blade](https://laravel.com/docs/10.x/blade), como veremos más adelante.
 
 #### Devolver una vista
 
@@ -763,7 +763,7 @@ public function down()
 }
 ```
 
-Aparte de `id()`, `string()` o `integer()`, existen una gran variedad de tipos de columnas disponibles para definir las tablas. Puedes encontrarlas en la [documentación oficial](https://laravel.com/docs/9.x/migrations#creating-columns).
+Aparte de `id()`, `string()` o `integer()`, existen una gran variedad de tipos de columnas disponibles para definir las tablas. Puedes encontrarlas en la [documentación oficial](https://laravel.com/docs/10.x/migrations#creating-columns).
 
 Una vez tenemos definida una migración, solo quedará ejecutarla para que así se ejecute en nuestra base de datos y aplique los cambios indicados. Para ejecutar las migraciones simplemente lanza el comando `migrate` de Artisan:
 
@@ -917,6 +917,8 @@ Route::post('articulos/', [ArticuloController::class, 'store'])->name('articulos
 
 La ruta empleada para mostrar el formulario será de tipo `GET` y la encargada de almacenar los datos será de tipo `POST`.
 
+
+
 A continuación será necesario implementar los métodos del controlador:
 
 ```php
@@ -1015,8 +1017,8 @@ La directiva @csrf agrega un campo oculto con el Token de usuario para que Larav
 
 Laravel también permite interactuar con la base de datos mediante otras técnicas distintas a Eloquent ORM. Las alternativas disponibles son:
 
-- Raw SQL: se trata de ejecutar sentencias SQL directamente contra la base de datos. Tienes toda la información disponible [aquí](https://laravel.com/docs/9.x/database).
-- Query Builder: es una interfaz de comunicación con la base de datos que permite lanzar prácticamente cualquier consulta. A diferencia de la anterior, no es tan eficiente en cuanto a rendimiento pero aporta otras ventajas como la seguridad y abstracción de base de datos. Tienes toda la información disponible [aquí](https://laravel.com/docs/9.x/queries).
+- Raw SQL: se trata de ejecutar sentencias SQL directamente contra la base de datos. Tienes toda la información disponible [aquí](https://laravel.com/docs/10.x/database).
+- Query Builder: es una interfaz de comunicación con la base de datos que permite lanzar prácticamente cualquier consulta. A diferencia de la anterior, no es tan eficiente en cuanto a rendimiento pero aporta otras ventajas como la seguridad y abstracción de base de datos. Tienes toda la información disponible [aquí](https://laravel.com/docs/10.x/queries).
 
 ### Tinker: un potente REPL para Laravel
 
