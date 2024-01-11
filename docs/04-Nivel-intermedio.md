@@ -295,90 +295,113 @@ a) Referenciar las dependecias JS y CSS utilizando BootstrapCDN (enlaces disponi
 
 b) Descargar las dependecias ([enlace](https://getbootstrap.com/docs/4.4/getting-started/download/)) e incluirlas manualmente en las carpetas `/public/css` y `/public/js`. 
 
-c) Utilizar Vite como herramienta de compilación. Actualmente es la opción por defecto de Laravel.
+c) Utilizar [Laravel Mix](https://laravel-mix.com/) para compilar nuestros archivos JS y CSS. 
 
-d) Utilizar [Laravel Mix](https://laravel-mix.com/) para compilar nuestros archivos JS y CSS. 
+> Laravel ha sustituido Laravel Mix por Vite a partir de la versión `9.19`, por lo que Vite es la opción más recomendada.
 
-!!! tip "Importante"
-    Laravel ha sustituido Laravel Mix por Vite a partir de la versión `9.19`, por lo que Vite es la opción más recomendada.
+d) Utilizar Vite como herramienta de compilación. Actualmente es la opción por defecto de Laravel.
 
 ### Bootstrap con Vite
 
-Sección en construcción.
+Como Laravel no usa Sass por defecto, cambiaremos el nombre de nuestro directorio `css`  por `scss` y el archivo incluido `app.css` por `app.scss` para seguir esa convención.
 
-### Bootstrap en Laravel Mix (opción no recomendada actualmente)
+Después de eso, tenemos que actualizar nuestro `vite.config.js`file para utilizar la nueva ruta en su `input`array:
 
-Laravel Mix es una herramienta basada en Webpack que sirve para compilar los recursos JS y CSS de la parte frontend. En este caso los recursos estarán inicialmente ubicados en la carpeta `/resources` y Laravel Mix dejará dentro de la carpeta `/public` los archivos resultantes ya minimizados.
-
-#### 1. Instalar el paquete Laravel/UI mediante composer.
-
-```bash
-composer require laravel/ui
+```js
+// vite.config.js
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: ['resources/scss/app.scss', 'resources/js/app.js'],
+            refresh: true,
+        }),
+    ]
+});
 ```
 
-#### 2. Añadir bootstrap a nuestro proyecto
+Lo siguiente que vamos a hacer es crear un alias para Bootstrap en nuestro fichero `vite.config.js` para que sea más sencillo de importar:
 
-```bash
-php artisan ui bootstrap
+```js
+...
+import path from 'path';
+
+export default defineConfig({
+    plugins: [ /...
+                .../ ],
+    resolve: {
+        alias: {
+            '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap')
+        }
+    }
+});
 ```
 
-#### 3. Instalar las dependencias
+Con nuestro alias configurado, lo que tenemos que hacer ahora es importar el CSS de Bootstrap en nuestro archivo Sass:
 
-El siguiente comando instalará las dependencias necesarias:
+```scss
+// resources/scss/app.scss
+@import "~bootstrap/scss/bootstrap";
 
-```bash
-npm install
 ```
 
-En ocasiones, al utilizar Vagrant puede haber problemas si la máquina virtual se ejecuta en un host con Windows 10, por lo que en ese caso lanzar:
+Esto importará **todas** las hojas de estilo que ofrece Bootstrap.
 
-```bash
-npm install --no-bin-links
-```
+Con eso hecho, lo único que queda es añadir nuestra directiva Vite de Blade en la vista o layout en la que queremos que se apliquen y donde ya podríamos usar cualquier componente de bootstrap:
 
-Este problema viene porque al realizar la acción `npm install` dentro de nuestra máquina virtual (Linux) se intentan crear enlaces simbólicos, pero al estar ésta sincronizada con Windows (sistema operativo del host) salta el error ya que esto no es posible en un sistema NTFS.
-
-En caso de que el error persista, puede que sea necesario hacer antes un borrado (`rm -rf node_modules`) y luego ejecutar `npm install --no-bin-links`.
-
-#### 4. Compilar el código JS y CSS mediante Webpack:
-
-El siguiente paso es compilar los recursos ubicados en `/resources`:
-
-```bash
-/* para el entorno de desarrollo  */
-npm run dev
-
-/* para el entorno de producción */
-npm run production
-```
-
-El comando anterior también dejará los archivos compilados en la carpeta `/public`.
-
-Es posible que ejecutar el comando desde la máquina virtual dé error. Si es así, ejecutarlo desde el la máquina host.
-
-En caso de tener algún problema con el reconocimiento de la herramienta Laravel Mix, volver a instalarla mediante el comando ` npm install laravel-mix@latest
-` y una vez terminada su instalación lanzar el comando `npm run dev`.
-
-#### 5. Incluir los ficheros generados (`public/js/app.js` y `public/css/app.css`) en nuestras vistas, utilizando el método helper `asset()`:
-
-```html
-<html>
+```php
 <head>
-    <meta charset="utf-8">
-    <title>Mi aplicación</title>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" />
+    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    <h1>Bienvenido a mi app</h1>
-    <div class="content">
-        @yield('content')
-    </div>
-    <script src="{{ asset('js/app.js') }}" type="text/js"></script>
+    <header class="p-3 mb-3 border-bottom">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="bi me-2" width="40" height="32" role="img" aria-label="Storefront">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z" />
+                    </svg>
+                </a>
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="#" class="nav-link px-2 link-secondary">Overview</a></li>
+                    <li><a href="#" class="nav-link px-2 link-dark">Inventory</a></li>
+                    <li><a href="#" class="nav-link px-2 link-dark">Customers</a></li>
+                    <li><a href="#" class="nav-link px-2 link-dark">Products</a></li>
+                </ul>
+
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                </form>
+
+                <div class="dropdown text-end">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://avatars.githubusercontent.com/u/98683" alt="mdo" class="rounded-circle" width="32"
+                            height="32">
+                    </a>
+                    <ul class="dropdown-menu text-small" style="">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
 </body>
-</html>
 ```
 
-El método `asset()` generará una URL a nuestros recursos en la carpeta `public/`. Si cambiamos la ubicación de nuestros recursos lo tendremos que especificar en la variable `ASSET_URL` del fichero `.env`.
+Ahora tenemos que compilar los recursos de nuestra web:
+
+```cmd
+npm run build
+```
+
+Y así deberíamos ver nuestras nuevas cabeceras de Bootstrap cuando entremos en nuestro site.
 
 ### Hands on! (opcional)
 

@@ -917,8 +917,6 @@ Route::post('articulos/', [ArticuloController::class, 'store'])->name('articulos
 
 La ruta empleada para mostrar el formulario será de tipo `GET` y la encargada de almacenar los datos será de tipo `POST`.
 
-
-
 A continuación será necesario implementar los métodos del controlador:
 
 ```php
