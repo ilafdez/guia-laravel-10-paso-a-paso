@@ -21,7 +21,7 @@ Algunas de las características de Laravel son:
 
 - Sistema intuitivo de rutas.
 - Motor de plantillas Blade para la generación de interfaces de usuario de forma flexible.
-- Soporte para cualquier base de datos mediante Eloquent ORM.
+- Soporte para cualquier base de datos relacional (**SQLite, MySQL, Postgres y SQL Server**) mediante Eloquent ORM.
 - Uso de la arquitectura MVC.
 - Dispone de multitud de componentes capaces de resolver las problemáticas más comunes del desarrollo de aplicaciones web.
 - Una grande comunidad de desarrolladores y expertos.
