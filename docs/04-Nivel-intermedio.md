@@ -296,6 +296,14 @@ a) Referenciar las dependecias JS y CSS utilizando BootstrapCDN (enlaces disponi
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 ```
 
+o bien si tiramos de archivos que están en nuestro proyecto dentro de la carpeta `public` en lugar de un CDN:
+
+```php
+<link rel="stylesheet" href="{{asset('vendor/css/bootstrap.min.css')}}">
+...
+<script src="{{asset('vendor/js/bootstrap.bundle.min.js')}}"></script>
+```
+
 c) Utilizar [Laravel Mix](https://laravel-mix.com/) para compilar nuestros archivos JS y CSS. 
 
 > Laravel ha sustituido Laravel Mix por Vite a partir de la versión `9.19`, por lo que Vite es la opción más recomendada.
@@ -810,7 +818,8 @@ class ArticuloFactory extends Factory
     {
         return [
             'titulo' => $this->faker->text($maxNbChars = 50),
-            'contenido' => $this->faker->text($maxNbChars = 400)
+            'contenido' => $this->faker->text($maxNbChars = 400),
+            'publicado' => $this->faker->boolean
         ];
     }
 }
