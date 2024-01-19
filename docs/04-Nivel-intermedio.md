@@ -145,7 +145,7 @@ public function update(Request $request, Articulo $articulo)
         'contenido' =>'required|string'
     ]);
     $articulo->update($validated);
-    return redirect(route('articulos.show', $articulo));
+    return redirect(route('articulos.show', $articulo->id));
 }
 ```
 
@@ -951,9 +951,7 @@ protected function redirectTo($request)
 
 A partir de la versión 8 de Laravel se recomienda utilizar Laravel Breeze, el cual utiliza Tailwind CSS en lugar de Bootstrap. Este aspecto es importante ya que afecta a las vistas creadas. Laravel Breeze es una implementación sencilla de las funciones más habituales de autenticación como: login, registro, recuperación de contraseña, verificación de correo electrónico o confirmación de contraseña por correo. Para ello creará todas las vistas, rutas y controladores necesarios y además los dejará disponibles en el código de nuestro proyecto para que podamos modificar todo aquello que necesitemos.
 
-!!! note "Laravel Breeze debe instalarse tras la creación del proyecto"
-
-    Laravel Breeze debe instalarse sobre un proyecto recién creado de Laravel, ya que eliminará código existente en rutas, etc. Es lo que Laravel considera un [Starter Kit](https://laravel.com/docs/9.x/starter-kits).
+> Laravel Breeze debe instalarse tras la creación del proyecto". Laravel Breeze debe instalarse sobre un proyecto recién creado de Laravel, ya que eliminará código existente en rutas, etc. Es lo que Laravel considera un [Starter Kit](https://laravel.com/docs/10.x/starter-kits).
 
 #### Crear la estructura necesaria con Laravel Breeze
 
