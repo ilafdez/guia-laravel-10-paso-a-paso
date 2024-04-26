@@ -120,7 +120,7 @@ La segunda es una base de datos llamada `test` que se utilizará para testing (e
 
 #### 7. Configuración adicional
 
-Si quieres saber más detalles sobre la configuración de Sail, como por ejemplo cambiar la versión de PHP por defecto o configurar opciones de testing, puedes visitar el siguiente enlace: [https://laravel.com/docs/9.x/sail](https://laravel.com/docs/9.x/sail)
+Si quieres saber más detalles sobre la configuración de Sail, como por ejemplo cambiar la versión de PHP por defecto o configurar opciones de testing, puedes visitar el siguiente enlace: [https://laravel.com/docs/10.x/sail](https://laravel.com/docs/10.x/sail)
 
 #### 8. Posibles errores
 

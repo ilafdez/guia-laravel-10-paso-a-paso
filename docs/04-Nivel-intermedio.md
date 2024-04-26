@@ -858,7 +858,7 @@ La autenticación es una funcionalidad presente en la gran mayoría de aplicacio
 Las opciones principales que provee Laravel para implementar la autenticación son:
 
 - Laravel UI
-- [Laravel Breeze](https://laravel.com/docs/9.x/starter-kits#laravel-breeze) (opción recomendada a partir de Laravel 8)
+- [Laravel Breeze](https://laravel.com/docs/10.x/starter-kits#laravel-breeze) (opción recomendada a partir de Laravel 8)
 
 A pesar de que la opción recomendada para crear la estructura inicial sea Laravel Breeze, la forma en la que accederemos a la información del usuario autenticado o el modo de securizar las rutas será el mismo.
 
@@ -1083,7 +1083,7 @@ También podremos comprobar en nuestras vistas si un usuario está autenticado o
 
 Muchas veces la autenticación no es suficiente y queremos especificar **qué acciones puede realizar cada usuario sobre una serie de recursos determinados**. Por ejemplo: ¿Puede cualquier usuario autenticado insertar nuevos artículos en una aplicación, o únicamente debería poder hacerlo un usuario de tipo administrador?¿Quién puede modificar un artículo, cualquier usuario o únicamente su creador?
 
-Aparte de proveernos de mecanismos para la autenticación, Laravel también facilita la [autorización](https://laravel.com/docs/9.x/authorization) de las acciones que pueden realizar los usuarios. Existen dos formas de gestionar la autorización:
+Aparte de proveernos de mecanismos para la autenticación, Laravel también facilita la [autorización](https://laravel.com/docs/10.x/authorization) de las acciones que pueden realizar los usuarios. Existen dos formas de gestionar la autorización:
 
 - **Gates**: Hacen referencia a los "permisos" tal y como los conocemos. Ejemplos de gates pueden ser: "crear_usuario", "editar_articulo", etc. En función de si un usuario tiene un permiso determinado, podrá por ejemplo visualizar una parte de nuestra vista o ejecutar una acción en un controlador.
 - **Policies**: Se utilizan cuando queremos definir permisos sobre modelos concretos. Es decir, agrupan las reglas de autorización sobre un modelo concreto.
@@ -1270,7 +1270,7 @@ Route::post('users', [UserController::class, 'store'])
 
 El formato siempre será el mismo: `can:xxxxx` o `cannot:xxxxx`.
 
-Tienes más información sobre la autorización en la [documentación oficial de Laravel](https://laravel.com/docs/9.x/authorization).
+Tienes más información sobre la autorización en la [documentación oficial de Laravel](https://laravel.com/docs/10.x/authorization).
 
 ## Manejo de sesiones
 
@@ -1361,7 +1361,7 @@ public function store(Request $request)
 
 Si la validación pasa correctamente el código seguirá ejecutándose de forma normal y corriente. Pero si la validación falla, se redirigirá al usuario a la página desde la que se ha realizado el envío del formulario. 
 
-Puedes ver todas las reglas de validación disponibles [aquí](https://laravel.com/docs/9.x/validation#available-validation-rules).
+Puedes ver todas las reglas de validación disponibles [aquí](https://laravel.com/docs/10.x/validation#available-validation-rules).
 
 ### Mostrar los errores en la vista
 
@@ -1416,4 +1416,4 @@ En caso de que el formulario tenga varios campos correctos, puede ser interesant
 
 Los mensajes de error pueden verse en el fichero `lang/en/validation.php`. En caso de quere traducirlos a otro idioma, bastaría con crear un fichero con la misma estructura bajo el directorio del nuevo idioma. Por ejemplo: `lang/es/validation.php`
 
-En caso de querer profundizar más en la detección y visualización de errores, puedes encontrar más información en la [página oficial](https://laravel.com/docs/9.x/validation).
+En caso de querer profundizar más en la detección y visualización de errores, puedes encontrar más información en la [página oficial](https://laravel.com/docs/10.x/validation).
